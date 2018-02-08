@@ -1,0 +1,48 @@
+{
+  "name": "micro-oidc-azure",
+  "version": "1.0.0",
+  "description": "micro azure oidc auth",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro",
+    "dev": "micro-dev -H localhost -d .env",
+    "test": "standard && nsp check && ava",
+    "coverage": "nyc ava",
+    "coveralls": "nyc ava && nyc report --reporter=lcov && cat coverage/lcov.info | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/telemark/micro-oidc-azure.git"
+  },
+  "keywords": [
+    "dockerhub",
+    "webhook",
+    "automatedbuilds"
+  ],
+  "author": {
+    "name": "Jonas Enge",
+    "email": "jonas.enge@gmail.com",
+    "url": "https://github.com/maccyber"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/telemark/micro-oidc-azure/issues"
+  },
+  "homepage": "https://github.com/telemark/micro-oidc-azure#readme",
+  "devDependencies": {
+    "ava": "0.25.0",
+    "axios": "0.17.1",
+    "coveralls": "3.0.0",
+    "micro-dev": "2.2.0",
+    "nsp": "3.1.0",
+    "nyc": "11.0.3",
+    "standard": "10.0.2",
+    "test-listen": "1.0.2"
+  },
+  "dependencies": {
+    "jsonwebtoken": "8.1.1",
+    "micro": "9.1.0",
+    "urlencoded-body-parser": "2.0.1",
+    "uuid": "3.2.1"
+  }
+}
