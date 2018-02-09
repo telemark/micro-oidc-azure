@@ -30,24 +30,12 @@ async function setup (handler) {
   }
 }
 
-async function login (req, res) {
-  const params = stringify(config.auth)
-  log('info', `Authorizing through ${config.metadata.authorization_endpoint}`)
-  redirect(res, `${config.metadata.authorization_endpoint}?${params}`)
-}
-
-async function logout (req, res) {
-  const params = stringify({ post_logout_redirect_uri: config.domain })
-  log('info', `Logging out through ${config.metadata.end_session_endpoint}`)
-  redirect(res, `${config.metadata.end_session_endpoint}?${params}`)
-}
-
 async function getToken (code) {
   const payload = stringify({
     client_id: config.auth.client_id,
     code,
     redirect_uri: config.auth.redirect_uri,
-    resource: 'https://graph.windows.net',
+    resource: 'https://graph.microsoft.com',
     client_secret: config.client_secret,
     grant_type: config.grant_type
   })
@@ -83,6 +71,30 @@ function validateToken (data) {
   return verifiedToken
 }
 
+async function getUserInfo (token) {
+  try {
+    log('info', `Retrieving user info from ${config.graph_user_info_url}`)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    const { data } = await axios(config.graph_user_info_url[0])
+    return data
+  } catch (error) {
+    console.log(error.response.data)
+    throw error.response ? error.response.data : error
+  }
+}
+
+async function login (req, res) {
+  const params = stringify(config.auth)
+  log('info', `Authorizing through ${config.metadata.authorization_endpoint}`)
+  redirect(res, `${config.metadata.authorization_endpoint}?${params}`)
+}
+
+async function logout (req, res) {
+  const params = stringify({ post_logout_redirect_uri: config.domain })
+  log('info', `Logging out through ${config.metadata.end_session_endpoint}`)
+  redirect(res, `${config.metadata.end_session_endpoint}?${params}`)
+}
+
 async function callback (req, res) {
   log('info', `Recivied callback data`)
   const callbackData = await urlBodyParse(req)
@@ -90,9 +102,10 @@ async function callback (req, res) {
   log('info', `Validated token`)
 
   try {
-    log('info', `Retrive graph api token`)
+    log('info', `Retrieving graph api token`)
     const token = await getToken(callbackData.code)
-    return Object.assign(profile, { token })
+    const userProfile = await getUserInfo(token.access_token)
+    return Object.assign(profile, { token, userProfile })
   } catch (error) {
     throw error
   }
