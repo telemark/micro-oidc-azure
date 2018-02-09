@@ -75,8 +75,9 @@ async function getUserInfo (token) {
   try {
     log('info', `Retrieving user info from ${config.graph_user_info_url}`)
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    const { data } = await axios(config.graph_user_info_url[0])
-    return data
+    const httpJobs = config.graph_user_info_url.map(url => axios(url))
+    const results = await Promise.all(httpJobs)
+    return results.map(el => el.data)
   } catch (error) {
     console.log(error.response.data)
     throw error.response ? error.response.data : error
@@ -100,6 +101,7 @@ async function callback (req, res) {
   const callbackData = await urlBodyParse(req)
   const profile = validateToken(callbackData)
   log('info', `Validated token`)
+  if (!config.graph_user_info_url) return profile
 
   try {
     log('info', `Retrieving graph api token`)
