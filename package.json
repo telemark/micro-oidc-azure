@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "jsonwebtoken": "8.2.0",
-    "micro": "9.1.0",
+    "micro": "9.1.4",
     "urlencoded-body-parser": "2.0.1",
     "uuid": "3.2.1"
   },
