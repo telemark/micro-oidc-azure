@@ -52,7 +52,7 @@
     "jsonwebtoken": "8.3.0",
     "micro": "9.3.2",
     "urlencoded-body-parser": "2.0.1",
-    "uuid": "3.2.1"
+    "uuid": "3.3.2"
   },
   "engines": {
     "node": ">=8.9.4"
