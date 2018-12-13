@@ -52,7 +52,7 @@ async function getToken (code) {
 }
 
 function validateToken (data) {
-  const decodedToken = jwt.decode(data.id_token, {complete: true})
+  const decodedToken = jwt.decode(data.id_token, { complete: true })
   const { x5c } = config.keys.find(key => decodedToken.header.x5t === key.x5t)
   const pubCert = `-----BEGIN CERTIFICATE-----\n${x5c}\n-----END CERTIFICATE-----`
   let verifiedToken
